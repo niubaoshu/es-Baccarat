@@ -4,11 +4,11 @@
 
 A Monte Carlo simulation engine and interactive command-line game for **EZ Baccarat** (免佣百家乐), written in Go. 
 
-This project mathematically implements the strict drawing rules of EZ Baccarat, including the official payouts and statistical probabilities for the popular **Dragon 7** and **Panda 8** side bets.
+This project implements the drawing rules of EZ Baccarat, including the official payouts and statistical probabilities for the popular **Dragon 7** and **Panda 8** side bets.
 
 ## Features
-* **Mathematically Accurate Engine**: Strictly follows the [California Bureau of Gambling Control (BGC)](https://oag.ca.gov/sites/all/files/agweb/pdfs/gambling/BGC_ez_baccarat_panda_8.pdf) third-card drawing matrix and Natural 8/9 rules.
-* **Concurrent Monte Carlo Simulation**: Uses goroutines and channels to simulate millions of hands per second, outputting exact House Edge and probabilities that match theoretical Baccarat academic limits.
+* **Accurate Engine**: Strictly follows the [California Bureau of Gambling Control (BGC)](https://oag.ca.gov/sites/all/files/agweb/pdfs/gambling/BGC_ez_baccarat_panda_8.pdf) third-card drawing matrix and Natural 8/9 rules.
+* **Monte Carlo Simulation**: Uses goroutines and channels to simulate games, outputting expected House Edge and probabilities.
 * **Interactive CLI Gameplay**: Play a standard game natively in your terminal.
 * **Special Bet Support**: Full rule coverage for EZ Baccarat's core "Dragon 7" (1:40) and "Panda 8" (1:25) side bets.
 * **Player Data Persistence**: Saves and tracks simulated player bankrolls and game history logs across sessions.
@@ -38,8 +38,7 @@ The exact third-card hit/stand matrix relies on player's total and Banker's tota
 
 ## Simulation Results
 
-Here is an example output from a 100,000,000 round Monte Carlo simulation:
-
+Executing a **100,000,000** round Monte Carlo simulation takes just around 20 seconds and yields empirical edges that match theoretical limits:
 ```text
 Starting simulation of 100000000 rounds using 30 workers...
 
@@ -47,7 +46,7 @@ Starting simulation of 100000000 rounds using 30 workers...
 Total Rounds: 100000000
 Time Taken:   20.634266008s (4846308 rounds/sec)
 
-Outcome              | Count        | Simulated %  | Expected %  
+Outcome              | Count        | Simulated %  | Expected %
 ------------------------------------------------------------------
 Player (Total)       |     44623956 |     44.6240% |     44.6247%
   ↳ Panda 8          |      3454935 |      3.4549% |      3.4543%
