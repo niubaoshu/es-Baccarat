@@ -1,0 +1,133 @@
+syntax = "proto3";
+
+package baccarat.v1;
+option go_package = "github.com/niubaoshu/es-Baccarat/api/baccarat/v1;baccaratv1";
+
+// ==========================================
+// API Services
+// ==========================================
+
+// LobbyService manages the global casino floor.
+service LobbyService {
+  // List all currently active tables
+  rpc ListTables (ListTablesRequest) returns (ListTablesResponse);
+  
+  // Create a new Baccarat table (8 decks)
+  rpc CreateTable (CreateTableRequest) returns (CreateTableResponse);
+}
+
+// TableService manages interactions within a specific table.
+service TableService {
+  // Join a table and take a seat
+  rpc JoinTable (JoinTableRequest) returns (JoinTableResponse);
+
+  // Leave a table and free up a seat
+  rpc LeaveTable (LeaveTableRequest) returns (LeaveTableResponse);
+
+  // Get the real-time state of the table (Polling endpoint)
+  rpc GetTableState (GetTableStateRequest) returns (GetTableStateResponse);
+
+  // Place a bet. The server instantly calculates the hand result 
+  // and returns the entire hand sequence for client animation (Unary Architecture)
+  rpc PlaceBet (PlaceBetRequest) returns (PlaceBetResponse);
+}
+
+// ==========================================
+// Message Definitions - Lobby
+// ==========================================
+
+message ListTablesRequest {}
+
+message ListTablesResponse {
+  repeated TableSummary tables = 1;
+}
+
+message TableSummary {
+  string table_id = 1;
+  int32 players_seated = 2;
+  int32 max_players = 3;  // Usually 7
+  string status = 4;      // e.g., "WAITING", "BETTING", "FULL"
+}
+
+message CreateTableRequest {
+  int32 max_players = 1;
+}
+
+message CreateTableResponse {
+  string table_id = 1;
+}
+
+// ==========================================
+// Message Definitions - Table Play
+// ==========================================
+
+message JoinTableRequest {
+  string table_id = 1;
+}
+
+message JoinTableResponse {
+  bool success = 1;
+  int32 seat_number = 2; // 1 to 7
+  string error_message = 3;
+}
+
+message LeaveTableRequest {
+  string table_id = 1;
+}
+
+message LeaveTableResponse {
+  bool success = 1;
+}
+
+message GetTableStateRequest {
+  string table_id = 1;
+}
+
+message GetTableStateResponse {
+  string table_id = 1;
+  string status = 2;                // "BETTING_OPEN", "DEALING", "RESOLVED"
+  int32 shoe_cards_remaining = 3;   // e.g., 416
+  repeated SeatedPlayer players = 4;
+}
+
+message SeatedPlayer {
+  int32 seat_number = 1;
+  string player_name = 2;
+  int64 balance = 3;
+}
+
+// ==========================================
+// Message Definitions - Betting & Unary Resolution
+// ==========================================
+
+message PlaceBetRequest {
+  string table_id = 1;
+  
+  // A map of BetType to amount (e.g., {"Player": 100, "Dragon": 20})
+  map<string, int64> bets = 2; 
+}
+
+message PlaceBetResponse {
+  bool success = 1;
+  string error_message = 2;
+
+  // Since we use the Unary approach, as soon as the bet is placed (and dealing finishes), 
+  // the server instantly returns the final outcome of the hand. The Flutter client 
+  // will delay to show these cards sequentially.
+  HandResult result = 3;
+}
+
+message HandResult {
+  // Ordered sequence of cards drawn (e.g., "SA", "H8")
+  repeated string player_cards = 1; 
+  repeated string banker_cards = 2;
+
+  int32 player_total = 3;
+  int32 banker_total = 4;
+
+  string outcome = 5; // "OutcomePlayer", "OutcomeBanker", "OutcomePanda8", etc.
+
+  // Total amount won (or refunded) for this specific user in this round
+  int64 total_payout = 6;
+  int64 new_balance = 7;
+}
