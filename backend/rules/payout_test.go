@@ -3,7 +3,7 @@ package rules
 import (
 	"testing"
 
-	"github.com/niubaoshu/es-Baccarat/model"
+	"github.com/niubaoshu/es-Baccarat/backend/model"
 )
 
 func TestDetermineOutcome(t *testing.T) {

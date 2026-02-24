@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/niubaoshu/es-Baccarat/config"
-	"github.com/niubaoshu/es-Baccarat/engine"
-	"github.com/niubaoshu/es-Baccarat/player"
+	"github.com/niubaoshu/es-Baccarat/backend/config"
+	"github.com/niubaoshu/es-Baccarat/backend/engine"
+	"github.com/niubaoshu/es-Baccarat/backend/player"
 )
 
 func main() {

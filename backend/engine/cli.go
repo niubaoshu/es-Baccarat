@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/niubaoshu/es-Baccarat/rules"
+	"github.com/niubaoshu/es-Baccarat/backend/rules"
 )
 
 // PromptBets asks the user to enter their bets via the terminal.

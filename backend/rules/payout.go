@@ -1,6 +1,6 @@
 package rules
 
-import "github.com/niubaoshu/es-Baccarat/model"
+import "github.com/niubaoshu/es-Baccarat/backend/model"
 
 // Outcome represents the final result of a Baccarat hand.
 type Outcome string

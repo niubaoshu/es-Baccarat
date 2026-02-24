@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/niubaoshu/es-Baccarat/config"
-	"github.com/niubaoshu/es-Baccarat/model"
-	"github.com/niubaoshu/es-Baccarat/player"
-	"github.com/niubaoshu/es-Baccarat/rules"
+	"github.com/niubaoshu/es-Baccarat/backend/config"
+	"github.com/niubaoshu/es-Baccarat/backend/model"
+	"github.com/niubaoshu/es-Baccarat/backend/player"
+	"github.com/niubaoshu/es-Baccarat/backend/rules"
 )
 
 // Game orchestrates the physical simulation of the shoe and hands.

@@ -1,7 +1,7 @@
 package rules
 
 import (
-	"github.com/niubaoshu/es-Baccarat/model"
+	"github.com/niubaoshu/es-Baccarat/backend/model"
 )
 
 // DeterminePlayerHit decides if the Player should draw a third card.
