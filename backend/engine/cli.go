@@ -11,6 +11,7 @@ import (
 )
 
 // PromptBets asks the user to enter their bets via the terminal.
+// PromptBets 通过终端提示用户输入本局投注信息。
 func PromptBets() map[rules.BetType]int {
 	scanner := bufio.NewScanner(os.Stdin)
 
@@ -83,6 +84,8 @@ func PromptBets() map[rules.BetType]int {
 		if valid && len(parsedBets) > 0 {
 			// Rule validation: Panda and Dragon requires Player or Banker bet.
 			// Same for Tie if strict, but the new document says Tie can be placed independently.
+			// 规则校验：熊猫8 和 龙7 需要同时有闲家或庄家的底注。
+			// 和局若严格要求也需底注，但按新规说明，和局可独立下注。
 			hasBase := parsedBets[rules.Player] > 0 || parsedBets[rules.Banker] > 0
 			hasSpecial := parsedBets[rules.Dragon] > 0 || parsedBets[rules.Panda] > 0
 

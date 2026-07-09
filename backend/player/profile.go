@@ -10,6 +10,7 @@ import (
 )
 
 // Profile represents a player's persistent data.
+// Profile 代表玩家的持久化数据。
 type Profile struct {
 	Username    string `json:"username"`
 	Balance     int    `json:"balance"`
@@ -27,6 +28,7 @@ func getProfilePath(username string) string {
 }
 
 // LoadProfile attempts to read a player's profile from disk.
+// LoadProfile 尝试从磁盘读取玩家的档案数据。
 func LoadProfile(username string) (*Profile, error) {
 	path := getProfilePath(username)
 	file, err := os.Open(path)
@@ -52,6 +54,7 @@ func LoadProfile(username string) (*Profile, error) {
 }
 
 // CreateProfile makes a new profile and saves it. Fails if it already exists.
+// CreateProfile 创建一个新的玩家档案并保存。若档案已存在则失败。
 func CreateProfile(username string, initBalance int) (*Profile, error) {
 	if err := os.MkdirAll(profileDir, 0755); err != nil {
 		return nil, err
@@ -75,6 +78,7 @@ func CreateProfile(username string, initBalance int) (*Profile, error) {
 }
 
 // Save writes the current state of the profile to disk.
+// Save 将当前档案状态写入磁盘。
 func (p *Profile) Save() error {
 	if err := os.MkdirAll(profileDir, 0755); err != nil {
 		return err

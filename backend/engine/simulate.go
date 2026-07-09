@@ -11,6 +11,7 @@ import (
 )
 
 // SimulationStats holds the aggregated results of a simulation run.
+// SimulationStats 保存一次模拟运行的汇总结果。
 type SimulationStats struct {
 	TotalRounds  int
 	OutcomeCount map[rules.Outcome]int
@@ -18,10 +19,12 @@ type SimulationStats struct {
 }
 
 // RunSimulation executes a fast, headless Monte Carlo simulation of Baccarat.
+// RunSimulation 执行一次快速的无界面百家乐蒙特卡洛模拟。
 func RunSimulation(cfg *config.GameConfig, totalRounds int, numWorkers int) *SimulationStats {
 	start := time.Now()
 
 	// Adjust workers if needed
+	// 根据需要调整工作协程数量
 	if numWorkers <= 0 {
 		numWorkers = 1
 	}
@@ -43,6 +46,7 @@ func RunSimulation(cfg *config.GameConfig, totalRounds int, numWorkers int) *Sim
 		targetRounds := roundsPerWorker
 		if w == 0 {
 			targetRounds += remainder // First worker takes the remainder
+			// 第一个工作协程承担余数轮次
 		}
 
 		go func(rounds int) {
@@ -55,6 +59,7 @@ func RunSimulation(cfg *config.GameConfig, totalRounds int, numWorkers int) *Sim
 
 			for i := 0; i < rounds; i++ {
 				// Re-shoe if needed
+				// 如有需要则更换发牌靴
 				if shoe.IsPastCutCard() {
 					shoe = model.NewShoe(cfg.DecksCount, cfg.CutCardThreshold)
 					shoe.Shuffle()
@@ -62,6 +67,7 @@ func RunSimulation(cfg *config.GameConfig, totalRounds int, numWorkers int) *Sim
 				}
 
 				// Deal
+				// 发牌
 				c1, _ := shoe.Draw()
 				c2, _ := shoe.Draw()
 				c3, _ := shoe.Draw()
@@ -110,6 +116,7 @@ func RunSimulation(cfg *config.GameConfig, totalRounds int, numWorkers int) *Sim
 }
 
 // PrintReport prints the statistical percentages to the console.
+// PrintReport 将统计百分比输出到控制台。
 func (s *SimulationStats) PrintReport() {
 	fmt.Printf("\n=== Simulation Complete ===\n")
 	fmt.Printf("Total Rounds: %d\n", s.TotalRounds)
@@ -137,6 +144,7 @@ func (s *SimulationStats) PrintReport() {
 	fmt.Printf("==================================================================\n")
 
 	// Calculate simulated EV for $1 bets on each option
+	// 计算每种选项以 1 美元下注时的模拟期望值（EV）
 	betProfits := map[rules.BetType]int{
 		rules.Player: 0,
 		rules.Banker: 0,

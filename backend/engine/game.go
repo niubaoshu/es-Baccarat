@@ -11,6 +11,7 @@ import (
 )
 
 // Game orchestrates the physical simulation of the shoe and hands.
+// Game 负责协调发牌靴和手牌的实际模拟流程。
 type Game struct {
 	Config  *config.GameConfig
 	Shoe    *model.Shoe
@@ -18,6 +19,7 @@ type Game struct {
 }
 
 // NewGame initializes a game session.
+// NewGame 初始化一个游戏会话。
 func NewGame(cfg *config.GameConfig, p *player.Profile) *Game {
 	g := &Game{
 		Config:  cfg,
@@ -42,6 +44,7 @@ func (g *Game) initShoe() {
 }
 
 // PlayRound handles the end-to-end logic for a single round of Baccarat given user bets.
+// PlayRound 处理一局百家乐从开始到结束的完整逻辑，包含用户下注信息。
 func (g *Game) PlayRound(bets map[rules.BetType]int) {
 	if g.Shoe.IsPastCutCard() {
 		fmt.Println("\n[Dealer] Cut card reached. Preparing new shoe...")
@@ -55,18 +58,24 @@ func (g *Game) PlayRound(bets map[rules.BetType]int) {
 	}
 
 	// 1. Deduct bets
+	// 1. 扣除投注金额
 	g.Profile.Balance -= totalBetAmount
 	g.Profile.TotalWager += totalBetAmount
 	g.Profile.HandsPlayed++
 
 	// 2. Deal initial cards
+	// 2. 发初始手牌
 	pHand := &model.Hand{}
 	bHand := &model.Hand{}
 
 	c1, _ := g.Shoe.Draw() // Player 1
+	// 闲家第1张
 	c2, _ := g.Shoe.Draw() // Banker 1
+	// 庄家第1张
 	c3, _ := g.Shoe.Draw() // Player 2
+	// 闲家第2张
 	c4, _ := g.Shoe.Draw() // Banker 2
+	// 庄家第2张
 
 	pHand.AddCard(c1)
 	bHand.AddCard(c2)
@@ -78,6 +87,7 @@ func (g *Game) PlayRound(bets map[rules.BetType]int) {
 	fmt.Printf("Banker Hand: %s  (Total: %d)\n", bHand.String(), bHand.TotalPoints())
 
 	// 3. Process Third Card Rules
+	// 3. 处理第三张牌规则
 	var pThirdCard *model.Card
 	playerHit := rules.DeterminePlayerHit(pHand, bHand)
 
@@ -105,6 +115,7 @@ func (g *Game) PlayRound(bets map[rules.BetType]int) {
 	}
 
 	// 4. Outcomes and Payouts
+	// 4. 结果与赔付
 	outcome := rules.DetermineOutcome(pHand, bHand)
 	fmt.Printf("\n>>> [Outcome]: %s Wins! <<<\n", outcome)
 
@@ -130,6 +141,7 @@ func (g *Game) PlayRound(bets map[rules.BetType]int) {
 	netChange := (totalWin + totalReturned) - totalBetAmount
 
 	// 5. Save State and Log
+	// 5. 保存状态并记录日志
 	_ = g.Profile.Save()
 
 	pStringCards := make([]string, len(pHand.Cards))
@@ -163,6 +175,7 @@ func (g *Game) PlayRound(bets map[rules.BetType]int) {
 	_ = LogRound(log)
 
 	// 6. Round Summary Print
+	// 6. 输出本局摘要
 	fmt.Printf("\n=== Round Summary ===\n")
 	fmt.Printf("Cards Left: %d\n", g.Shoe.CardsLeft())
 	fmt.Printf("Net Change: $%d\n", netChange)

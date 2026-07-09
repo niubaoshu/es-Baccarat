@@ -8,23 +8,26 @@ import (
 )
 
 // RoundLog defines what gets written to the logging file for every hand played.
+// RoundLog 定义每局游戏写入日志文件的内容。
 type RoundLog struct {
 	Timestamp      time.Time      `json:"timestamp"`
 	Player         string         `json:"player"`
 	InitialBalance int            `json:"initial_balance"`
 	FinalBalance   int            `json:"final_balance"`
 	Bets           map[string]int `json:"bets"` // BetType -> Amount
-	PlayerHand     []string       `json:"player_hand"`
-	BankerHand     []string       `json:"banker_hand"`
-	PlayerPoints   int            `json:"player_points"`
-	BankerPoints   int            `json:"banker_points"`
-	Outcome        string         `json:"outcome"`
-	NetChange      int            `json:"net_change"`
+	// 下注类型 -> 金额
+	PlayerHand   []string `json:"player_hand"`
+	BankerHand   []string `json:"banker_hand"`
+	PlayerPoints int      `json:"player_points"`
+	BankerPoints int      `json:"banker_points"`
+	Outcome      string   `json:"outcome"`
+	NetChange    int      `json:"net_change"`
 }
 
 var logDir = "data/logs"
 
 // LogRound appends a round summary to the JSONL log file.
+// LogRound 将一局的摘要信息追加写入 JSONL 日志文件。
 func LogRound(logEntry RoundLog) error {
 	if err := os.MkdirAll(logDir, 0755); err != nil {
 		return err

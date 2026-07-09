@@ -29,6 +29,7 @@ func main() {
 	cfg := config.DefaultConfig()
 
 	// --- Simulation Mode ---
+	// --- 模拟模式 ---
 	if simulateRounds > 0 {
 		stats := engine.RunSimulation(cfg, simulateRounds, simulateWorkers)
 		stats.PrintReport()
@@ -36,11 +37,13 @@ func main() {
 	}
 
 	// --- Interactive Mode ---
+	// --- 交互模式 ---
 	if playerName == "" && !createPlayer {
 		playerName = "default_player"
 		fmt.Printf("No player specified. Using '%s'.\n", playerName)
 
 		// Attempt to create implicitly if doesn't exist
+		// 若玩家不存在则尝试隐式创建
 		_, err := player.LoadProfile(playerName)
 		if err == player.ErrPlayerNotFound {
 			_, err = player.CreateProfile(playerName, initialBalance)
@@ -57,6 +60,7 @@ func main() {
 	}
 
 	// 2. Profile Loading or Creation
+	// 2. 加载或创建玩家档案
 	var p *player.Profile
 	var err error
 
@@ -85,9 +89,11 @@ func main() {
 	}
 
 	// 3. Initialize Game Engine
+	// 3. 初始化游戏引擎
 	game := engine.NewGame(cfg, p)
 
 	// 4. Main Game Loop
+	// 4. 主游戏循环
 	fmt.Println("\n--- Starting EZ Baccarat Session ---")
 	for {
 		fmt.Printf("\n[ Current Balance: $%d ]\n", game.Profile.Balance)
